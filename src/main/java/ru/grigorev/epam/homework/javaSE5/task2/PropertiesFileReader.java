@@ -31,12 +31,11 @@ public class PropertiesFileReader {
         if (!path.toFile().exists()) throw new NoPropertiesFileException();
 
         try (Stream<String> lines = Files.lines(path)) {
-
             lines.filter(s -> !s.isEmpty()).forEach(s -> {
-                int index = s.indexOf('=');
-                if (index == -1) index = s.indexOf(':');
-                properties.put(s.substring(0, index).trim(),
-                        s.substring(index + 1).trim());
+                int index = s.indexOf('=') > s.indexOf(':') ? s.indexOf('=') : s.indexOf(':');
+                if (index != -1) {
+                    properties.put(s.substring(0, index).trim(), s.substring(index + 1).trim());
+                }
             });
         } catch (IOException e) {
             throw new RuntimeException(e);

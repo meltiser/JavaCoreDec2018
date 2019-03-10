@@ -1,9 +1,9 @@
 package ru.grigorev.epam.homework.javaSE5.task1.exceptions;
 
-import ru.grigorev.epam.homework.javaSE5.task1.FilesHandler;
+import ru.grigorev.epam.homework.javaSE5.task1.FileHandler;
 
 /**
- * This exception is thrown if something went wrong in {@link FilesHandler} methods.
+ * This exception is thrown if something went wrong in {@link FileHandler} methods.
  * Used to wrap {@link java.io.IOException} and handle other issues.
  *
  * @author Dmitriy Grigorev

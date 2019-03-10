@@ -1,7 +1,6 @@
 package ru.grigorev.epam.homework.javaSE5.task2;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.grigorev.epam.homework.javaSE5.task2.exceptions.NoKeyInPropertiesException;
@@ -12,6 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Dmitriy Grigorev
@@ -46,23 +48,23 @@ class PropertiesFileReaderTest {
     @Test
     void readFileTest() {
         pfr.readFile("test.properties");
-        Assertions.assertEquals(2,pfr.getProperties().size());
+        assertEquals(2, pfr.getProperties().size());
     }
 
     @Test
     void readFileExceptionTest() {
-        Assertions.assertThrows(NoPropertiesFileException.class, () -> pfr.readFile("noFile.properties"));
+        assertThrows(NoPropertiesFileException.class, () -> pfr.readFile("noFile.properties"));
     }
 
     @Test
     void getValueByKeyTest() {
         pfr.readFile("test.properties");
-        Assertions.assertEquals("value", pfr.getValueByKey("key"));
+        assertEquals("value", pfr.getValueByKey("key"));
     }
 
     @Test
     void getValueByKeyExceptionTest() {
         pfr.readFile("test.properties");
-        Assertions.assertThrows(NoKeyInPropertiesException.class, () -> pfr.getValueByKey("noSuchKey"));
+        assertThrows(NoKeyInPropertiesException.class, () -> pfr.getValueByKey("noSuchKey"));
     }
 }

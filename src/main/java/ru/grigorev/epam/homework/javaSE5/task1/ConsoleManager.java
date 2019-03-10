@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  * @author Dmitriy Grigorev
  */
 public class ConsoleManager {
-    private FilesHandler filesHandler = new FilesHandlerImpl();
+    private FileHandler fileHandler = new FileHandlerImpl();
 
     private String currentDirectory = System.getProperty("user.dir") + "\\";
     private BufferedReader input;
@@ -20,6 +20,7 @@ public class ConsoleManager {
 
     public void initMainLoop() throws ConsoleManagerException {
         input = new BufferedReader(new InputStreamReader(System.in));
+        println("Type \"help\" to see list of commands");
         printCurrentDirectory();
         try {
             while (isRunning) {
@@ -60,6 +61,7 @@ public class ConsoleManager {
         String[] words = s.split("\\s+");
         if (s.equalsIgnoreCase(Commands.EXIT)) {
             breakMainLoop();
+            return;
         }
         if (s.equalsIgnoreCase(Commands.DIR)) {
             showCurrentFolderContent();
@@ -87,16 +89,29 @@ public class ConsoleManager {
     }
 
     private void showHelp() {
-        //TODO
+        StringBuilder helpSb = new StringBuilder();
+        helpSb.append(String.format("%s%n", "Commands:"))
+                .append(String.format("%-10s%s%n", Commands.CD, "changes directory"))
+                .append(String.format("%s%-7s%s%n", Commands.CD, Commands.DIRECTORY_UP, "go one level up"))
+                .append(String.format("%-10s%s%n", Commands.DIR, "shows a list of files and subfolders"))
+                .append(String.format("%-10s%s%n", Commands.EXIT, "exits app"))
+                .append(String.format("%-10s%s%n", Commands.OPEN, "opens file in default desktop program"))
+                .append(String.format("%-10s%s%n", Commands.CREATE, "creates file"))
+                .append(String.format("%-10s%s%n", Commands.DELETE, "deletes file"))
+                .append(String.format("%-10s%s%n", Commands.EDIT, "edits file (opens file editor input)"))
+                .append(String.format("%-10s%s%n", Commands.COMMIT, "(editing) finishes editing and commits changes"))
+                .append(String.format("%-10s%s%n", Commands.CANCEL, "(editing) finishes editing and cancels changes"))
+                .append(String.format("%-10s%s%n", Commands.HELP, "shows help"));
+        print(helpSb.toString());
     }
 
     private void editFile(String fileName) throws ConsoleManagerException {
         try {
-            String txtContent = filesHandler.getTxtContent(currentDirectory + fileName);
+            String txtContent = fileHandler.getTxtContent(currentDirectory + fileName);
             println("--------Editing: " + fileName + " (type \"commit\" to finish editing or \"cancel\")--------");
             print(txtContent);
             String fileInput = getFileInput();
-            filesHandler.editTxtFile(currentDirectory + fileName, fileInput);
+            fileHandler.editTxtFile(currentDirectory + fileName, fileInput);
             println("--------Editing finished--------");
         } catch (FileHandlerException e) {
             printException(e);
@@ -105,7 +120,7 @@ public class ConsoleManager {
 
     private void deleteFile(String fileName) {
         try {
-            filesHandler.deleteFile(currentDirectory + fileName);
+            fileHandler.deleteFile(currentDirectory + fileName);
             println("File " + fileName + " deleted!");
         } catch (FileHandlerException e) {
             printException(e);
@@ -114,7 +129,7 @@ public class ConsoleManager {
 
     private void openFile(String fileName) {
         try {
-            filesHandler.openFile(currentDirectory + fileName);
+            fileHandler.openFile(currentDirectory + fileName);
         } catch (FileHandlerException e) {
             printException(e);
         }
@@ -122,7 +137,7 @@ public class ConsoleManager {
 
     private void createFile(String fileName) {
         try {
-            filesHandler.createFile(currentDirectory + fileName);
+            fileHandler.createFile(currentDirectory + fileName);
             println("File " + fileName + " created!");
         } catch (FileHandlerException e) {
             printException(e);
@@ -131,12 +146,18 @@ public class ConsoleManager {
 
     private void changeDirectory(String directoryTo) {
         try {
-            currentDirectory = filesHandler.changeDirectory(currentDirectory, directoryTo);
+            currentDirectory = fileHandler.changeDirectory(currentDirectory, directoryTo);
         } catch (FileHandlerException e) {
             printException(e);
         }
     }
 
+    /**
+     * Used for get input for editing file.
+     *
+     * @return
+     * @throws ConsoleManagerException
+     */
     private String getFileInput() throws ConsoleManagerException {
         StringBuilder sb = new StringBuilder();
         String toFile = "";
@@ -162,7 +183,7 @@ public class ConsoleManager {
 
     private void showCurrentFolderContent() {
         try {
-            println(filesHandler.getCurrentFolderContent(currentDirectory));
+            println(fileHandler.getCurrentFolderContent(currentDirectory));
         } catch (FileHandlerException e) {
             printException(e);
         }

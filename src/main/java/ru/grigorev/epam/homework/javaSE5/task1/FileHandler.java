@@ -5,12 +5,16 @@ import ru.grigorev.epam.homework.javaSE5.task1.exceptions.FileHandlerException;
 /**
  * @author Dmitriy Grigorev
  */
-public interface FilesHandler {
+public interface FileHandler {
     /**
      * Opens file in default desktop program (if it's possible).
      *
      * @param absoluteDir
-     * @throws FileHandlerException
+     * @throws FileHandlerException if:
+     *                              passed directory is a file;
+     *                              desktop is not supported;
+     *                              file doesn't not exist;
+     *                              or other IO problems
      */
     void openFile(String absoluteDir) throws FileHandlerException;
 
@@ -23,7 +27,7 @@ public interface FilesHandler {
     void createFile(String absoluteDir) throws FileHandlerException;
 
     /**
-     * Deletes file in a directory. Rules are same as for {@link FilesHandler#createFile(String)}
+     * Deletes file in a directory. Rules are same as for {@link FileHandler#createFile(String)}
      *
      * @param absoluteDir
      * @throws FileHandlerException
@@ -35,7 +39,7 @@ public interface FilesHandler {
      *
      * @param absoluteDir
      * @param dataToWrite
-     * @throws FileHandlerException
+     * @throws FileHandlerException if file doesn't ends with ".txt"
      */
     void editTxtFile(String absoluteDir, String dataToWrite) throws FileHandlerException;
 
@@ -44,7 +48,7 @@ public interface FilesHandler {
      *
      * @param absoluteDir
      * @return lines in file
-     * @throws FileHandlerException
+     * @throws FileHandlerException if file doesn't ends with ".txt"
      */
     String getTxtContent(String absoluteDir) throws FileHandlerException;
 
@@ -64,7 +68,7 @@ public interface FilesHandler {
      * @param currentDirectory
      * @param directoryTo
      * @return string with absolute directory
-     * @throws FileHandlerException
+     * @throws FileHandlerException if directory doesn't exist or passed directory is a file
      */
     String changeDirectory(String currentDirectory, String directoryTo) throws FileHandlerException;
 }

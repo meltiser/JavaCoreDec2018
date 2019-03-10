@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * @author Dmitriy Grigorev
  */
-public class FilesHandlerImpl implements FilesHandler {
+public class FileHandlerImpl implements FileHandler {
 
     @Override
     public void openFile(String absoluteDir) throws FileHandlerException {
@@ -34,7 +34,7 @@ public class FilesHandlerImpl implements FilesHandler {
                 throw new FileHandlerException("Can't open file", e);
             }
         } else {
-            throw new FileHandlerException("File is not exist!");
+            throw new FileHandlerException("File doesn't not exist!");
         }
     }
 
@@ -64,7 +64,7 @@ public class FilesHandlerImpl implements FilesHandler {
         Path path = Path.of(absoluteDir);
 
         if (!absoluteDir.endsWith(".txt")) {
-            throw new FileHandlerException("The app can edit only .txt files!");
+            throw new FileHandlerException("The app can read only .txt files!");
         }
 
         try (Stream<String> lines = Files.lines(path)) {
@@ -109,7 +109,7 @@ public class FilesHandlerImpl implements FilesHandler {
     public String changeDirectory(String currentDirectory, String directoryTo) throws FileHandlerException {
         Path path = Path.of(currentDirectory + directoryTo);
         if (!path.toFile().exists()) {
-            throw new FileHandlerException("Directory doesn't exists!");
+            throw new FileHandlerException("Directory doesn't exist!");
         }
 
         if (directoryTo.equals(Commands.DIRECTORY_UP)) {
